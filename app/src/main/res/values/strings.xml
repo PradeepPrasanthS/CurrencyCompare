@@ -11,4 +11,7 @@
     <string name="refresh">Refresh</string>
     <string name="edit_base_currency">Edit Base Currency</string>
     <string name="today_s_value">Today\'s value</string>
+    <string name="base_currency_value">%s Value : 1 %s</string>
+    <string name="result">%s Value : %s</string>
+    <string name="edit_target_currency">Edit Target Currency</string>
 </resources>

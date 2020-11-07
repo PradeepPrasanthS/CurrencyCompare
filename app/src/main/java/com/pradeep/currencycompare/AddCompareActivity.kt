@@ -20,14 +20,14 @@ class AddCompareActivity : AppCompatActivity() {
         val next = findViewById<TextView>(R.id.next)
 
         val sharedPreferences = getSharedPreferences(ResultsActivity.MyPREF, Context.MODE_PRIVATE)
-        var base = sharedPreferences.getString("base", "")
-        if (base != ""){
+        val base = sharedPreferences.getString("base", "")
+        val compare = sharedPreferences.getString("compare", "")
+        val editTarget = intent.getStringExtra("action")
+        if (compare != "" && compare != null && editTarget != "edit-target") {
             val intent = Intent(this, ResultsActivity::class.java)
             startActivity(intent)
             finish()
         }
-
-        base = intent.getStringExtra("base")
 
         baseCurrency.text = base
 
@@ -35,9 +35,10 @@ class AddCompareActivity : AppCompatActivity() {
             if (currencyToCompare.text.toString().isEmpty()) {
                 currencyToCompare.error = getString(R.string.enter_currency)
             } else {
+                val editor = sharedPreferences.edit()
+                editor.putString("compare", currencyToCompare.text.toString())
+                editor.apply()
                 val intent = Intent(this, ResultsActivity::class.java)
-                intent.putExtra("base", base)
-                intent.putExtra("compare", currencyToCompare.text.toString())
                 startActivity(intent)
                 finish()
             }
