@@ -14,4 +14,5 @@
     <string name="base_currency_value">%s Value : 1 %s</string>
     <string name="result">%s Value : %s</string>
     <string name="edit_target_currency">Edit Target Currency</string>
+    <string name="logout">Logout</string>
 </resources>

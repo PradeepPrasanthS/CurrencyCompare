@@ -11,6 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import java.util.*
+
 
 class ResultsActivity : AppCompatActivity() {
 
@@ -29,11 +33,12 @@ class ResultsActivity : AppCompatActivity() {
         val refresh = findViewById<TextView>(R.id.refresh)
         val editBase = findViewById<TextView>(R.id.edit_base)
         val editTarget = findViewById<TextView>(R.id.edit_target)
+        val logout = findViewById<TextView>(R.id.logout)
         loader = findViewById(R.id.loader)
 
         val sharedPreferences = getSharedPreferences(MyPREF, Context.MODE_PRIVATE)
-        base = sharedPreferences?.getString("base", "") ?: ""
-        compare = sharedPreferences?.getString("compare", "") ?: ""
+        base = sharedPreferences.getString("base", "")?.toUpperCase(Locale.ROOT) ?: ""
+        compare = sharedPreferences.getString("compare", "")?.toUpperCase(Locale.ROOT) ?: ""
 
         baseCurrencyText.text = getString(R.string.base_currency_value, base, base)
 
@@ -56,6 +61,24 @@ class ResultsActivity : AppCompatActivity() {
         }
 
         loadData(result)
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+
+        val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+
+        logout.setOnClickListener {
+            mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this) {
+                    val editor = sharedPreferences.edit()
+                    editor.clear()
+                    editor.apply()
+                    val intent = Intent(this, LoginActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+        }
 
     }
 
