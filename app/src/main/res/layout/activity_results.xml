@@ -113,9 +113,10 @@
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/progressBar1"
+        android:id="@+id/loader"
         style="?android:attr/progressBarStyleLarge"
         android:visibility="gone"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true" />

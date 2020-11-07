@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
@@ -14,6 +16,7 @@ class ResultsActivity : AppCompatActivity() {
 
     private lateinit var base: String
     private lateinit var compare: String
+    private lateinit var loader: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,8 +29,9 @@ class ResultsActivity : AppCompatActivity() {
         val refresh = findViewById<TextView>(R.id.refresh)
         val editBase = findViewById<TextView>(R.id.edit_base)
         val editTarget = findViewById<TextView>(R.id.edit_target)
+        loader = findViewById(R.id.loader)
 
-        val sharedPreferences = getSharedPreferences(ResultsActivity.MyPREF, Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences(MyPREF, Context.MODE_PRIVATE)
         base = sharedPreferences?.getString("base", "") ?: ""
         compare = sharedPreferences?.getString("compare", "") ?: ""
 
@@ -56,18 +60,22 @@ class ResultsActivity : AppCompatActivity() {
     }
 
     private fun loadData(result: TextView) {
+        loader.visibility = View.VISIBLE
         val queue = Volley.newRequestQueue(this)
 
         val stringRequest = JsonObjectRequest(Request.Method.GET, "$URL$base", null,
             { response ->
                 if (response != null) {
+                    loader.visibility = View.GONE
                     val rates = response.getJSONObject("rates")
                     val value = rates.getString(compare)
                     result.text = getString(R.string.result, compare, value)
+                    Log.i(TAG, "Success Response")
                 }
             },
             { error ->
-                Log.i(TAG, error.toString())
+                loader.visibility = View.GONE
+                Log.e(TAG, error.toString())
             })
 
         queue.add(stringRequest)
